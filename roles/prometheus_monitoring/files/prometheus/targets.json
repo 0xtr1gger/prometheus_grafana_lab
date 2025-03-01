@@ -1,0 +1,18 @@
+[
+  {
+    "labels": {
+      "job": "Host"
+    },
+    "targets": [
+      "node-exporter:9100"
+    ]
+  },
+  {
+    "labels": {
+      "job": "Prometheus"
+    },
+    "targets": [
+      "localhost:9090"
+    ]
+  }
+]

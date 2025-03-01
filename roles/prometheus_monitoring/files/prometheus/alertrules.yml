@@ -1,0 +1,56 @@
+groups:
+
+  - name: CPU
+    rules:
+
+    - alert: HighCpusage
+      expr: sum by(instance)(irate(node_cpu_seconds_total{mode="idle"}[1m])) * 100 < 10
+      for: 30s
+      labels:
+        severity: "critical"
+      annotations:
+        summary: High CPU usage
+        description: "CPU usage on instance {{ $labels.instance }} has been above 90% for the last 2 minutes."
+
+    - alert: HostHighCpuLoad
+      expr: (avg by (instance) (rate(node_cpu_seconds_total{mode!="idle"}[1m]))) > .80
+      for: 30s
+      labels:
+        severity: "critical"
+      annotations:
+        summary: Host high CPU load (instance {{ $labels.instance }})
+        description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - name: Memory
+    rules:
+
+    - alert: HostOutOfMemory
+      expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes < .20)
+      for: 30s
+      labels:
+        severity: "critical"
+      annotations:
+        summary: Host out of memory (instance {{ $labels.instance }})
+        description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+    - alert: HostMemoryUnderMemoryPressure
+      expr: (rate(node_vmstat_pgmajfault[5m]) > 1000)
+      for: 0m
+      labels:
+        severity: "critical"
+      annotations:
+        summary: Host memory under memory pressure (instance {{ $labels.instance }})
+        description: "The node is under heavy memory pressure. High rate of loading memory pages from disk.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - name: Storage
+    rules:
+    - alert: HighStorageUsage
+      expr: (node_filesystem_size_bytes - node_filesystem_free_bytes) / node_filesystem_size_bytes > 0.9
+      for: 30s
+      labels:
+        severity: "critical"
+      annotations:
+        summary: High Storage usage
+        description: "Storage usage on instance {{ $labels.instance }} is high."
+
+

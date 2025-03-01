@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 15s     # how frequently to scrame metrics from the targets
+  evaluation_interval: 15s # how frequently to evaludate rules
+
+
+alerting: # the list of available Alertmanagers
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - "alert-manager:9093" 
+
+rule_files:
+  - alertrules.yml # the location of the configuration file with the rules on when to raise alerts
+
+scrape_configs:
+  - job_name: 'Host'
+    file_sd_configs:
+    - files:
+      - 'targets.json' # targets conofigured in the JSON file
+
+## alternatively, you can configure jobs like this:
+
+#  - job_name: "prometheus"
+#    static_configs:
+#      - targets: ["prometheus:9090"]    # scrape metrics for Prometheus server itself
+#
+#  - job_name: "node-exporter"
+#    static_configs:
+#      - targets: ["node-exporter:9100"] # scrape metrics from the Node Exporter
