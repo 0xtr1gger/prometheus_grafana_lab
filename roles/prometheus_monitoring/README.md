@@ -1,9 +1,9 @@
-Role Name
+Prometheus, Grafana, Node Exporter, and Alertmanager setup
 =========
 
 This role is used to automatically set up Prometheus server, Grafama, Node Exporter, and Alertmanager Docker containers on a Linux machine. Docker Compose is used to orchestrate the containers.
 
-Requirements
+Dependencies
 ------------
 
 - [`community.docker`](https://docs.ansible.com/ansible/latest/collections/community/docker/index.html)
@@ -20,7 +20,7 @@ Role Variables
 Example Playbook
 ----------------
 
-```bash
+```YAML
 ---
 - name: VM setup
   hosts: all
