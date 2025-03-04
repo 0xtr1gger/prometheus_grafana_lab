@@ -1,7 +1,7 @@
 ---
 - name: VM setup
   hosts: all
-  become: yes
+  become: true
   roles:
     - install_docker
     - prometheus_monitoring
