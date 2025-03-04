@@ -3,39 +3,39 @@
 # tasks file for prometheus_grafana_alertmanager
 
 - name: Debug app_directory
-  debug:
+  ansible.builtin.debug:
     var: api_directory
 
 - name: Create a directory for the API code
-  file:
+  ansible.builtin.file:
     path: "{{ api_directory }}"
     state: directory
     mode: '0755'
 
 - name: Copy necessary files to the VM
-  synchronize:
+  ansible.builtin.synchronize:
     mode: push
     src: files/
     dest: "{{ api_directory }}"
 
 - name: Generate alertmanager.yml from a template
-  template:
+  ansible.builtin.template:
     src: alertmanager.yml.j2
     dest: /app/alertmanager/alertmanager.yml
 
 - name: List /app content
-  shell: ls -l /app
+  ansible.builtin.shell: ls /app
   register: ls_output
 
 - name: debug /app content
-  debug:
+  ansible.builtin.debug:
     var: ls_output.stdout
 
 - name: Ensure previous Docker containers are down
-  shell: docker-compose -f {{ api_directory }}/docker-compose.yml down
+  ansible.builtin.shell: docker-compose -f {{ api_directory }}/docker-compose.yml down
 
 - name: Ensure no containers are left
-  shell: docker container prune --force
+  ansible.builtin.shell: docker container prune --force
 
 - name: Start services with docker-compose up
-  shell: docker-compose -f {{ api_directory }}/docker-compose.yml up -d 
+  ansible.builtin.shell: docker-compose -f {{ api_directory }}/docker-compose.yml up -d 
